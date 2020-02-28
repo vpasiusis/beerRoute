@@ -1,20 +1,33 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Beer;
 use Illuminate\Http\Request;
+use Validator;
+use DB;
+use App\Classes\Distances;
+use App\Classes\Breweries;
+use App\Classes\Location;
 
 class BeersController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($startLocation)
     {
-        $beers = Beer::paginate(15);
-        return view('beer.index', ['beers' => $beers]);
+        $distances = new Distances();
+        $breweries = new Breweries();
+        $geoCodes=DB::table('geocodes')->get();
+        $beers = Beer::all();
+        $distanceMatrix=$distances->FormingMatrix($geoCodes);
+        $breweriesArray=$breweries->FormingDraweries($beers);
+        $firtBrewery=$distances->FirstPosibleBrewery($geoCodes,$startLocation->latitude,$startLocation->longitude);
+       # return view('beer.index', ['beers' => $beers]);
     }
 
     /**
@@ -35,7 +48,17 @@ class BeersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'latitude' => ['required','regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'], 
+            'longitude' => ['required','regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/']
+        ]);
+        
+        if ($validator->fails()) {
+            return redirect('/')->with('success','Post Created');
+        } else {
+           $this->index(new Location($request->input('latitude'),$request->input('longitude')));
+        }
+        
     }
 
     /**
