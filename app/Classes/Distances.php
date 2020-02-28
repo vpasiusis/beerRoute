@@ -7,8 +7,8 @@ class Distances
     {
         $DistancesMatrix = array( );
 
-        for ($col = 0; $col < count($geoCodes); $col++) {
-            for ($col2 = 0; $col2 < count($geoCodes); $col2++) {
+        foreach($geoCodes as $col=>$value) {
+            foreach($geoCodes as $col2=>$value2) {
                 $DistancesMatrix[$geoCodes[$col]->brewery_id][$geoCodes[$col2]->brewery_id]=$this->haversineGreatCircleDistance(
                     $geoCodes[$col]->latitude, $geoCodes[$col]->longitude,
                     $geoCodes[$col2]->latitude, $geoCodes[$col2]->longitude,
@@ -17,12 +17,18 @@ class Distances
         }
         return $DistancesMatrix;
     }
-
+    public function formGeoCodes($geoCodes){
+        $newGeoCodes=[];
+        foreach($geoCodes as $col=>$value) {
+            $newGeoCodes[$geoCodes[$col]->brewery_id]=[$geoCodes[$col]->latitude,$geoCodes[$col]->longitude];
+        }
+        return $newGeoCodes;
+    }
     public function FirstPosibleBrewery($geoCodes,$latitude,$longitude)
     {
         $PosibleBrewery = array();
 
-        for ($col = 0; $col < count($geoCodes); $col++) {
+        foreach($geoCodes as $col=>$value){
             $distance=$this->haversineGreatCircleDistance(
                 $geoCodes[$col]->latitude, $geoCodes[$col]->longitude,
                 $latitude,$longitude,
@@ -33,6 +39,23 @@ class Distances
     
         }
         return $PosibleBrewery;
+    }
+    public function removeUnusedBreweries($geoCodes,$breweries){
+        
+        foreach($geoCodes as $key2=>$value2) {
+            $used=false;
+            foreach($breweries as $key=>$value){
+                if($key==$geoCodes[$key2]->brewery_id){
+                    $used=true;
+                break;
+                }
+            }
+            if($used!=true){
+                unset($geoCodes[$key2]);
+                $used=false;
+            }
+        }
+        return $geoCodes;
     }
 
 

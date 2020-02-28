@@ -9,6 +9,7 @@ use DB;
 use App\Classes\Distances;
 use App\Classes\Breweries;
 use App\Classes\Location;
+use App\Classes\Route;
 
 class BeersController extends Controller
 {
@@ -22,11 +23,17 @@ class BeersController extends Controller
     {
         $distances = new Distances();
         $breweries = new Breweries();
+        $route = new Route();
         $geoCodes=DB::table('geocodes')->get();
         $beers = Beer::all();
-        $distanceMatrix=$distances->FormingMatrix($geoCodes);
         $breweriesArray=$breweries->FormingDraweries($beers);
-        $firtBrewery=$distances->FirstPosibleBrewery($geoCodes,$startLocation->latitude,$startLocation->longitude);
+        $geoCodes=$distances->removeUnusedBreweries($geoCodes,$breweriesArray);
+        $distanceMatrix=$distances->FormingMatrix($geoCodes);
+        $firstBrewery=$distances->FirstPosibleBrewery($geoCodes,$startLocation->latitude,$startLocation->longitude);
+
+        $newgeoCodes=$distances->formGeoCodes($geoCodes);
+        $newgeoCodes;
+        $niekas=$route->Routes($distanceMatrix,$breweriesArray,$firstBrewery,$startLocation,$newgeoCodes);
        # return view('beer.index', ['beers' => $beers]);
     }
 

@@ -13,4 +13,6 @@ class BeerObject
         $this->categorie = $categorie;
         $this->style = $style;
     } 
+
+    
 }
