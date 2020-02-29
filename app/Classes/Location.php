@@ -1,6 +1,8 @@
 <?php
 namespace App\Classes;
-
+/**
+ * Object for location
+ */
 class Location
 {
 

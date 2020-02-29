@@ -100,6 +100,13 @@ class BeersController extends Controller
     {
         //
     }
+    /** 
+     * Method who proccess all the data and selects best route
+     *
+     * @param   Location  $startLocation  
+     *
+     * @return  ArrayOfSelectedBeersAndVisitedBreweries
+     */
     public function dataProcessing($startLocation)
     {
         $distances = new Distances();
@@ -108,15 +115,13 @@ class BeersController extends Controller
         $geoCodes=DB::table('geocodes')->get();
         $breweriesList=DB::table('breweries')->get();
         $beers = Beer::all();
-        $breweriesArray=$breweries->FormingDraweries($beers,$geoCodes);
+        $breweriesArray=$breweries->FormingBreweries($beers,$geoCodes);
         $geoCodes=$distances->removeUnusedBreweries($geoCodes,$breweriesArray);
         $distanceMatrix=$distances->FormingMatrix($geoCodes);
         $firstBrewery=$distances->FirstPosibleBrewery($geoCodes,$startLocation->latitude,$startLocation->longitude);
         $newgeoCodes=$distances->formGeoCodes($geoCodes);
         $finalArray=$route->Routes($distanceMatrix,$breweriesArray,$firstBrewery,$startLocation,$newgeoCodes);
-        
         $finalArray[100][0]=$breweries->gettingBreweriesNames($finalArray[100][0],$breweriesList);
-        
         return $finalArray;
     }
 }

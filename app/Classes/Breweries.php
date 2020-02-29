@@ -5,7 +5,15 @@ use App\Classes\BeerObject;
 
 class Breweries
 {
-   public function FormingDraweries($beers,$geoCodes){
+    /**
+     * Method makes array of breweries with all of their beers
+     *
+     * @param   [beer data]  $beers     
+     * @param   [geoCodes data]  $geoCodes  
+     *
+     * @return  array   Array of all breweries which have geoCoordinates
+     */
+   public function FormingBreweries($beers,$geoCodes){
        $DraweriesArray=array();
        for ($col = 0; $col < count($beers); $col++) {
             $object=new BeerObject($beers[$col]->name,$beers[$col]->cat_id,$beers[$col]->style_id);
@@ -16,6 +24,14 @@ class Breweries
         return $DraweriesArray;
    }
 
+   /**
+    * Method checks if brewery has geoCoordinate in database
+    *
+    * @param   [geoCodes object]  geoCodes  
+    * @param   [int]  $id        [id of brewery]
+    *
+    * @return  boolean 
+    */
    public function checkIfDataExists($geoCodes,$id){
         foreach($geoCodes as $geoCode){
             if($geoCode->brewery_id==$id){
@@ -25,6 +41,14 @@ class Breweries
         return false;
 
    }
+   /**
+    * Method checks if current brewery has any types of beers already selected
+    *
+    * @param   [array of beersObjects]  $beers          [current brewery beers]
+    * @param   [array of beersObjects]  $selectedBeers  [already selected beers]
+    *
+    * @return  array of beerObjects     Filtered beers types
+    */
    public function checkIftypeExist($beers,$selectedBeers)
    {
        
@@ -50,6 +74,13 @@ class Breweries
       $beers = array_values($beers);
       return $beers;
    }
+   /**
+    * Method checks if brewery has same beer types, if yes removes them
+    *
+    * @param   [arrayOfBeerObjects]  $beers  [Brewery beers]
+    *
+    * @return  arrayOfBeerObjects    Filtered beers array
+    */
    public function checkType($beers)
    {
       
@@ -67,6 +98,14 @@ class Breweries
         }
         return $beers;
    }
+   /**
+    * Method gets breweries objects from $ids
+    *
+    * @param   [array int]  $ids        [breweries ids]
+    * @param   [array of breweries]  $breweries  [breweries objects]
+    *
+    * @return  arrayofBreweries   
+    */
    public function gettingBreweriesNames($ids,$breweries){
     $BreweriesArray=array();
 
