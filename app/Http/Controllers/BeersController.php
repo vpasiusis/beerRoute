@@ -21,19 +21,22 @@ class BeersController extends Controller
      */
     public function index($startLocation)
     {
+        $start = microtime(true);
         $distances = new Distances();
         $breweries = new Breweries();
         $route = new Route();
         $geoCodes=DB::table('geocodes')->get();
         $beers = Beer::all();
-        $breweriesArray=$breweries->FormingDraweries($beers);
+        $breweriesArray=$breweries->FormingDraweries($beers,$geoCodes);
         $geoCodes=$distances->removeUnusedBreweries($geoCodes,$breweriesArray);
         $distanceMatrix=$distances->FormingMatrix($geoCodes);
         $firstBrewery=$distances->FirstPosibleBrewery($geoCodes,$startLocation->latitude,$startLocation->longitude);
-
         $newgeoCodes=$distances->formGeoCodes($geoCodes);
         $newgeoCodes;
         $niekas=$route->Routes($distanceMatrix,$breweriesArray,$firstBrewery,$startLocation,$newgeoCodes);
+        $time=microtime(true)-$start;
+        dump($time);
+        dump($niekas);
        # return view('beer.index', ['beers' => $beers]);
     }
 
