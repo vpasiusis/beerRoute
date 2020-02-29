@@ -67,4 +67,16 @@ class Breweries
         }
         return $beers;
    }
+   public function gettingBreweriesNames($ids,$breweries){
+    $BreweriesArray=array();
+
+    foreach($ids as $id){
+        foreach($breweries as $brewerie){
+            if($id==$brewerie->id){
+                array_push($BreweriesArray,$brewerie);
+            }
+        }
+    }
+    return $BreweriesArray;
+    }
 }

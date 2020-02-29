@@ -11,10 +11,8 @@
 */
 Route::get('/','PagesController@index');
 
+Auth::routes();
+
 Route::resource('/beers', 'BeersController');
-Route::resource('/breweries', 'BreweriesController');
-Route::resource('/categories', 'CategoriesController');
-Route::resource('/geocodes', 'GeoCodesController');
-Route::resource('/styles', 'StylesController');
 
 

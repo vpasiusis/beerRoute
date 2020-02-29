@@ -73,8 +73,9 @@ class Route
             $geoCodes[end($finalArray[100][0])][0], $geoCodes[end($finalArray[100][0])][1],
             $startLoc->latitude,$startLoc->longitude, $earthRadius = 6371000);
         
-        $finalArray[100][1]+=$comingHome;
+        $finalArray[100][1] += $comingHome;
         $finalArray[100][2] = microtime(true) - $start;
+        $finalArray[100][3] = $this->typesCount($finalArray);
         return $finalArray;
     }
 
@@ -107,8 +108,11 @@ class Route
     public function typesCount($array)
     {
         $count=0;
-        foreach($array as $arraySecond){
-           foreach($arraySecond as $arrayThird){
+        foreach($array as $arraySecond=>$value){
+            if($arraySecond==100){
+            break;
+            }
+            foreach($array[$arraySecond] as $arrayThird){
                 $count=$count+1;
            }
        }
