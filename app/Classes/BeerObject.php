@@ -1,6 +1,8 @@
 <?php
 namespace App\Classes;
-
+/**
+ * Object of beer, out of these objects the breweries list is made
+ */
 class BeerObject
 {
 

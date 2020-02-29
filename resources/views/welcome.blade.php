@@ -2,7 +2,7 @@
 
 
 @section('content')
-<h1>Kurti naują skelbimą</h1>
+<h1>Beer Route</h1>
 {!! Form::open(array('action' => 'BeersController@store')) !!}
     <div class="form-group">
         {{Form::label('latitude','Latitude')}}
@@ -10,7 +10,7 @@
         {{Form::label('longitude','Longitute')}}
         {{Form::text('longitude','', ['class'=>'form-control','placeholder'=>'Longitute'])}}
    
-    {{Form::submit('Patvirtinti',['class'=>'btn btn-primary'])}}
+    {{Form::submit('Search Route',['class'=>'btn btn-primary'])}}
 {!! Form::close() !!}
         
 @endsection

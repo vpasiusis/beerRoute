@@ -5,7 +5,26 @@ use App\Classes\Breweries;
 use App\Classes\Distances;
 class Route
 {
-   
+    
+
+     /**
+     * Method visits all breweries from given first one
+     *
+     * @param   ArrayMatrix  $distanceMatrix  
+     * @param   ArrayBreweries  $breweriesArray  
+     * @param   Int  $start   CurrentIdOfBrewery
+     * @param   ArrayBreweries  $array    FinalArray
+     * @param   ArrayBreweries  $countingArray
+     * @param   geoCodesArray  $geoCodes  
+     * @param   double  $cur_distance    current distance travelled
+     * @param   Location  $startLoc      Location of start
+     * @param   breweriesIdArray  $breweries_id   
+     * @param   breweriesId  $key       current brewery id
+     * @param   breweriesIdArray  $visited   all Visited Breweries
+     * @param   breweriesIdArray  $marked    breweries which is visited or rejected
+     *
+     * @return  ArrayBreweries        closes recursion, or returns Array of visited breweries
+     */
     public function CountingRoute($distanceMatrix,$breweriesArray,$start,$array,
     $countingArray,$geoCodes,$cur_distance,$startLoc,$breweries_id,$key,$visited,$marked)
     {
@@ -44,6 +63,17 @@ class Route
         
        
     }
+   /**
+    * Method select which route is better
+    *
+    * @param   MatrixArray  $distanceMatrix  
+    * @param   ArrayOfbreweries  $breweriesArray  
+    * @param   ArrayOfDistance  $firstBrewery    Posible first bwereries distances
+    * @param   Location  $startLoc        starting Location
+    * @param   geoCodesArray  $geoCodes       
+    *
+    * @return  ArrayOfBreweriesAndBeers     FinalArray with routes               
+    */
     public function Routes($distanceMatrix,$breweriesArray,$firstBrewery,$startLoc,$geoCodes)
     {
         $brew=new Breweries();
@@ -59,6 +89,11 @@ class Route
             $countingArray[]=$brew->checkType($breweriesArray[$key]);
             $currentDistance=$this->addValue(0,$firstBrewery[$key],$key,$startLoc,$geoCodes);
             if($currentDistance!=-1){
+                /**
+                 * Goes to CountingRoute for every possible firstChoice brewery
+                 *
+                 * @var [type]
+                 */
                 $newArray=$this->CountingRoute($distanceMatrix,$breweriesArray,$key,$finalArray,
                 $countingArray,$geoCodes,$currentDistance,$startLoc,$breweries_id,0,$visited,$marked);
             }
@@ -73,11 +108,22 @@ class Route
             $geoCodes[end($finalArray[100][0])][0], $geoCodes[end($finalArray[100][0])][1],
             $startLoc->latitude,$startLoc->longitude, $earthRadius = 6371000);
         
-        $finalArray[100][1]+=$comingHome;
+        $finalArray[100][1] += $comingHome;
         $finalArray[100][2] = microtime(true) - $start;
+        $finalArray[100][3] = $this->typesCount($finalArray);
         return $finalArray;
     }
-
+    /**
+     * Method add value to current distance and checks if it possible to travel to given brewery
+     *
+     * @param   double  $currentDistance  
+     * @param   double  $travel           Km to brewery
+     * @param   int  $brewery_id          Id of next brewery
+     * @param   Location  $startLoc       
+     * @param   ArrayOfgeoCodes  $geoCodes  
+     *
+     * @return  double/int   if distance is not over limit return newDistance, if not return -1
+     */
     public function addValue($currentDistance,$travel,$brewery_id,$startLoc,$geoCodes){
 
         
@@ -95,7 +141,13 @@ class Route
             return -1;
         }
     }
-
+    /**
+     * Method created array of breweries ids
+     *
+     * @param   ArrayOfBreweries  $breweries  
+     *
+     * @return  ArrayOfBreweriesIds    
+     */
     public function getBreweriesId($breweries){
         $brewerie_id=[];
         foreach($breweries as $key=>$value){
@@ -103,12 +155,21 @@ class Route
         }
         return $brewerie_id;
     }
-
+    /**
+     * Method counts how many types of beers given array has
+     *
+     * @param   ArrayOfBreweries  $array 
+     *
+     * @return  int    number of beer types
+     */
     public function typesCount($array)
     {
         $count=0;
-        foreach($array as $arraySecond){
-           foreach($arraySecond as $arrayThird){
+        foreach($array as $arraySecond=>$value){
+            if($arraySecond==100){
+            break;
+            }
+            foreach($array[$arraySecond] as $arrayThird){
                 $count=$count+1;
            }
        }

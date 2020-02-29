@@ -20,24 +20,8 @@ class BeersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index($startLocation)
-    {
-        $start = microtime(true);
-        $distances = new Distances();
-        $breweries = new Breweries();
-        $route = new Route();
-        $geoCodes=DB::table('geocodes')->get();
-        $beers = Beer::all();
-        $breweriesArray=$breweries->FormingDraweries($beers,$geoCodes);
-        $geoCodes=$distances->removeUnusedBreweries($geoCodes,$breweriesArray);
-        $distanceMatrix=$distances->FormingMatrix($geoCodes);
-        $firstBrewery=$distances->FirstPosibleBrewery($geoCodes,$startLocation->latitude,$startLocation->longitude);
-        $newgeoCodes=$distances->formGeoCodes($geoCodes);
-        $newgeoCodes;
-        $niekas=$route->Routes($distanceMatrix,$breweriesArray,$firstBrewery,$startLocation,$newgeoCodes);
-        $time=microtime(true)-$start;
-        dump($time);
-        dump($niekas);
-       # return view('beer.index', ['beers' => $beers]);
+    {   
+       
     }
 
     /**
@@ -66,7 +50,8 @@ class BeersController extends Controller
         if ($validator->fails()) {
             return redirect('/')->with('success','Post Created');
         } else {
-           $this->index(new Location($request->input('latitude'),$request->input('longitude')));
+            $finalArray=$this->dataProcessing(new Location($request->input('latitude'),$request->input('longitude')));
+           return view('beer.index')-> with('finalArray',$finalArray);
         }
         
     }
@@ -114,5 +99,29 @@ class BeersController extends Controller
     public function destroy($id)
     {
         //
+    }
+    /** 
+     * Method who proccess all the data and selects best route
+     *
+     * @param   Location  $startLocation  
+     *
+     * @return  ArrayOfSelectedBeersAndVisitedBreweries
+     */
+    public function dataProcessing($startLocation)
+    {
+        $distances = new Distances();
+        $breweries = new Breweries();
+        $route = new Route();
+        $geoCodes=DB::table('geocodes')->get();
+        $breweriesList=DB::table('breweries')->get();
+        $beers = Beer::all();
+        $breweriesArray=$breweries->FormingBreweries($beers,$geoCodes);
+        $geoCodes=$distances->removeUnusedBreweries($geoCodes,$breweriesArray);
+        $distanceMatrix=$distances->FormingMatrix($geoCodes);
+        $firstBrewery=$distances->FirstPosibleBrewery($geoCodes,$startLocation->latitude,$startLocation->longitude);
+        $newgeoCodes=$distances->formGeoCodes($geoCodes);
+        $finalArray=$route->Routes($distanceMatrix,$breweriesArray,$firstBrewery,$startLocation,$newgeoCodes);
+        $finalArray[100][0]=$breweries->gettingBreweriesNames($finalArray[100][0],$breweriesList);
+        return $finalArray;
     }
 }

@@ -3,6 +3,13 @@ namespace App\Classes;
 
 class Distances
 {
+    /**
+     * Method forms distances matrix for all breweries   
+     *
+     * @param   [array of geoCoordinates]  $geoCodes  
+     *
+     * @return  arrayMatrix  Distances between breweries
+     */
     public function FormingMatrix($geoCodes)
     {
         $DistancesMatrix = array( );
@@ -17,6 +24,13 @@ class Distances
         }
         return $DistancesMatrix;
     }
+    /**
+     * Reform geoCodes that id would be breweryId
+     *
+     * @param   GeoCodesArray  $geoCodes  
+     *
+     * @return  GeoCodesArray       Reformed GeoCodesArray
+     */
     public function formGeoCodes($geoCodes){
         $newGeoCodes=[];
         foreach($geoCodes as $col=>$value) {
@@ -24,6 +38,15 @@ class Distances
         }
         return $newGeoCodes;
     }
+    /**
+     * Select only possible first brewery array
+     *
+     * @param   GeoCodesArray  $geoCodes   
+     * @param   decimal  $latitude   StartingLatitude
+     * @param   decimal  $longitude  StartingLongitute
+     *
+     * @return  ArrayOfDistances      FirstPossibleChoiceDistances
+     */
     public function FirstPosibleBrewery($geoCodes,$latitude,$longitude)
     {
         $PosibleBrewery = array();
@@ -40,6 +63,14 @@ class Distances
         }
         return $PosibleBrewery;
     }
+    /**
+     * Method removes geoCoordinate if data doesn't exist
+     *
+     * @param   geoCodesArray  $geoCodes   
+     * @param   breweriesArray $breweries  
+     *
+     * @return  geoCodesArray  Filtered geoCodes
+     */
     public function removeUnusedBreweries($geoCodes,$breweries){
         
         foreach($geoCodes as $key2=>$value2) {
