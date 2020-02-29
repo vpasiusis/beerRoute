@@ -14,5 +14,6 @@ class BeerObject
         $this->style = $style;
     } 
 
+
     
 }
