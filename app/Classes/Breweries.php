@@ -51,7 +51,6 @@ class Breweries
     */
    public function checkIftypeExist($beers,$selectedBeers)
    {
-       
        $beers=$this->checkType($beers);
        $count=0;
        foreach($beers as $beer){
@@ -83,21 +82,22 @@ class Breweries
     */
    public function checkType($beers)
    {
-      
-       foreach($beers as $key=>$value){
-            for($start=$key+1;$start<count($beers);$start++){
-                
-                if($beers[$start]->categorie ==$beers[$key]->categorie 
-                and $beers[$start]->style ==$beers[$key]->style)
+      for($key=0;$key<count($beers[0]);$key++){
+            for($start=$key+1;$start<count($beers[0]);$start++){
+                if($beers[0][$start]->categorie ==$beers[0][$key]->categorie 
+                and $beers[0][$start]->style ==$beers[0][$key]->style)
                 {
-                    unset($beers[$start]);
-                    $beers = array_values($beers);
+                    unset($beers[0][$key]);
+                    break;
                 }
             }
             
         }
+        $beers = array_values($beers[0]);
         return $beers;
    }
+
+
    /**
     * Method gets breweries objects from $ids
     *

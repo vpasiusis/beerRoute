@@ -12,7 +12,7 @@
            <h2 class="card-title">Algorithm time - {{$finalArray[$final][2]}}</h2>
            <h2 class="card-title">Visited Breweries({{count($finalArray[$final][0])}})</h2>
            @foreach ($finalArray[$final][0] as $brewerie)
-           <p class="card-title">{{$brewerie->name}}</p>
+           <p class="card-title" style="margin-left: 50px;">{{$brewerie->name}}</p>
            @endforeach
            @else
            
@@ -20,7 +20,7 @@
            @foreach ($finalArray[$final] as $object)
            
             <div class="card-block">
-            <p class="card-title"> {{$object->name}}</p>
+            <p class="card-title" style="margin-left: 50px;"> {{$object->name}}</p>
             </div>
             
             @endforeach
