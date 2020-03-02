@@ -42,18 +42,25 @@ class BeersController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'latitude' => ['required','regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'], 
-            'longitude' => ['required','regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/']
-        ]);
-        
-        if ($validator->fails()) {
+       
+        if ($this->validates($request)->fails()) {
             return redirect('/')->with('success','Post Created');
         } else {
             $finalArray=$this->dataProcessing(new Location($request->input('latitude'),$request->input('longitude')));
            return view('beer.index')-> with('finalArray',$finalArray);
         }
         
+    }
+
+    public function validates(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'latitude' => ['required','regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'], 
+            'longitude' => ['required','regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/']
+        ]);
+
+
+        return $validator;
     }
 
     /**

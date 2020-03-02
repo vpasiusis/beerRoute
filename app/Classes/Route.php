@@ -164,6 +164,7 @@ class Route
      */
     public function typesCount($array)
     {
+      
         $count=0;
         foreach($array as $arraySecond=>$value){
             if($arraySecond==100){
