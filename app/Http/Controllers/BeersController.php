@@ -9,7 +9,6 @@ use DB;
 use App\Classes\Distances;
 use App\Classes\Breweries;
 use App\Classes\Location;
-use App\Classes\BeerObject;
 use App\Classes\Route;
 
 class BeersController extends Controller
@@ -117,23 +116,9 @@ class BeersController extends Controller
      */
     public function dataProcessing($startLocation)
     {
-
-
         $distances = new Distances();
         $breweries = new Breweries();
         $route = new Route();
-
-        $beerArray=array(
-            array(
-                new BeerObject("Wiesen Edel Weisse",4,5),
-                new BeerObject("Aventinus Weizenstarkbier / Doppel Weizen Bock",4,55),
-                new BeerObject("Schneider Weisse",4,55),
-                new BeerObject("Weisse Dunkel", -1,-1),
-                new BeerObject("St. Martin Doppelbock" , 7,90)
-            )
-        );
-        dd($breweries->checkType($beerArray));
-
         $geoCodes=DB::table('geocodes')->get();
         $breweriesList=DB::table('breweries')->get();
         $beers = Beer::all();
@@ -144,7 +129,6 @@ class BeersController extends Controller
         $newgeoCodes=$distances->formGeoCodes($geoCodes);
         $finalArray=$route->Routes($distanceMatrix,$breweriesArray,$firstBrewery,$startLocation,$newgeoCodes);
         $finalArray[100][0]=$breweries->gettingBreweriesNames($finalArray[100][0],$breweriesList);
-        
         return $finalArray;
     }
 }

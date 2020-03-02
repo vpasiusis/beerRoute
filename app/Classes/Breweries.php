@@ -82,18 +82,19 @@ class Breweries
     */
    public function checkType($beers)
    {
-      for($key=0;$key<count($beers[0]);$key++){
-            for($start=$key+1;$start<count($beers[0]);$start++){
-                if($beers[0][$start]->categorie ==$beers[0][$key]->categorie 
-                and $beers[0][$start]->style ==$beers[0][$key]->style)
+      
+      for($key=0;$key<count($beers);$key++){
+            for($start=$key+1;$start<count($beers);$start++){
+                if($beers[$start]->categorie ==$beers[$key]->categorie 
+                and $beers[$start]->style ==$beers[$key]->style)
                 {
-                    unset($beers[0][$key]);
+                    unset($beers[$key]);
                     break;
                 }
             }
             
         }
-        $beers = array_values($beers[0]);
+        $beers = array_values($beers);
         return $beers;
    }
 

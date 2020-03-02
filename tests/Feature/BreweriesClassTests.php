@@ -23,46 +23,38 @@ class BreweriesClassTests extends TestCase
      public function check_selected_counting_types()
      {
          $controller = new Breweries();
-         $response = $controller->checkIftypeExist($this->Datas(),$this->DataForFilteringSelectedBeers());
+         $response = $controller->checkIftypeExist($this->DataForFilteringSelectedBeers(),$this->Datas());
          $this->assertEquals($this->DataSelectedFiltered(), $response);
      }
 
     public function Data(){
         $beerArray=array(
-            array(
                 new BeerObject("Wiesen Edel Weisse",4,5),
                 new BeerObject("Aventinus Weizenstarkbier / Doppel Weizen Bock", 4,55),
                 new BeerObject( "Weisse Dunkel", -1,-1),
                 new BeerObject("St. Martin Doppelbock" , 7,90)
-            )
         );
         return $beerArray;
     }
     public function FilteredbeersData(){
         $beerArray=array(
-            array(
                 new BeerObject("Wiesen Edel Weisse",4,5),
-                new BeerObject("Schneider Weisse", 4,55),
+                new BeerObject("Aventinus Weizenstarkbier / Doppel Weizen Bock", 4,55),
                 new BeerObject( "Weisse Dunkel", -1,-1),
                 new BeerObject("St. Martin Doppelbock" , 7,90)
-            )
         );
         return $beerArray;
     }
 
     public function DataForFilteringSelectedBeers(){
         $beerArray=array(
-            array(
-                new BeerObject("Wiesen Edel Weisse",4,5),
-            )
+            new BeerObject("Wiesen Edel Weisse",4,5),
         );
         return $beerArray;
     }
 
     public function DataSelectedFiltered(){
-        $beerArray=array(
-            array()
-        );
+        $beerArray=array( );
         return $beerArray;
     }
 
